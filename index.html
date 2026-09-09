@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZacGym AI - Posture & Calisthenics AI</title>
+    <!-- Google Fonts: Inter & Orbitron para visual Cyberpunk/Esportivo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-dark: #090a0e;
+            --bg-card: #121620;
+            --bg-card-hover: #1a202c;
+            --neon-lime: #76ff03;
+            --neon-lime-glow: rgba(118, 255, 3, 0.4);
+            --neon-cyan: #00f0ff;
+            --neon-red: #ff3344;
+            --text-white: #ffffff;
+            --text-muted: #a0aec0;
+            --font-title: 'Orbitron', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Chevrons Decorativos Laterais em Verde Neon (Estilo ZacGym App) */
+        .chevron-left, .chevron-right {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-style: solid;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.6;
+            animation: pulseChevron 2s infinite alternate;
+        }
+
+        .chevron-left {
+            left: 0;
+            border-width: 60px 0 60px 40px;
+            border-color: transparent transparent transparent var(--neon-lime);
+            filter: drop-shadow(0 0 15px var(--neon-lime));
+        }
+
+        .chevron-right {
+            right: 0;
+            border-width: 60px 40px 60px 0;
+            border-color: transparent var(--neon-lime) transparent transparent;
+            filter: drop-shadow(0 0 15px var(--neon-lime));
+        }
+
+        @keyframes pulseChevron {
+            0% { opacity: 0.3; transform: translateY(-50%) scale(0.9); }
+            100% { opacity: 0.8; transform: translateY(-50%) scale(1.1); }
+        }
+
+        /* Navbar & Music Player */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(9, 10, 14, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(118, 255, 3, 0.2);
+            z-index: 1000;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-title);
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--neon-lime);
+            text-shadow: 0 0 12px var(--neon-lime-glow);
+            letter-spacing: 3px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: #fff;
+            font-size: 0.8rem;
+            background: var(--neon-red);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: var(--font-body);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            color: var(--text-white);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--neon-lime);
+            text-shadow: 0 0 8px var(--neon-lime);
+        }
+
+        /* Player de Música Eletrônica Adrenalina */
+        .music-player-btn {
+            background: rgba(18, 22, 32, 0.9);
+            border: 2px solid var(--neon-lime);
+            color: var(--neon-lime);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 0 15px rgba(118, 255, 3, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .music-player-btn:hover {
+            background: var(--neon-lime);
+            color: #000;
+            box-shadow: 0 0 25px var(--neon-lime);
+        }
+
+        .equalizer-bars {
+            display: flex;
+            gap: 3px;
+            height: 14px;
+            align-items: flex-end;
+        }
+
+        .bar {
+            width: 3px;
+            height: 100%;
+            background: var(--neon-lime);
+            border-radius: 2px;
+            animation: bounce 0.6s infinite ease-in-out alternate;
+        }
+
+        .music-player-btn:hover .bar {
+            background: #000;
+        }
+
+        .bar:nth-child(2) { animation-delay: 0.2s; }
+        .bar:nth-child(3) { animation-delay: 0.4s; }
+
+        .paused .bar {
+            animation-play-state: paused;
+            height: 4px !important;
+        }
+
+        @keyframes bounce {
+            0% { height: 4px; }
+            100% { height: 16px; }
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            padding: 140px 5% 60px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 40px;
+            background: radial-gradient(circle at 30% 30%, rgba(118, 255, 3, 0.08) 0%, transparent 60%);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(118, 255, 3, 0.1);
+            border: 1px solid var(--neon-lime);
+            color: var(--neon-lime);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .hero-content h1 {
+            font-family: var(--font-title);
+            font-size: 3.5rem;
+            line-height: 1.1;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .hero-content h1 .highlight {
+            color: var(--neon-lime);
+            text-shadow: 0 0 20px var(--neon-lime-glow);
+        }
+
+        .hero-content p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            max-width: 540px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #1b3d00, var(--neon-lime));
+            color: #000;
+            font-weight: 900;
+            font-size: 1rem;
+            padding: 16px 32px;
+            border-radius: 10px;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: 2px solid var(--neon-lime);
+            box-shadow: 0 0 20px var(--neon-lime-glow);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 0 35px var(--neon-lime);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-white);
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 16px 32px;
+            border-radius: 10px;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+        }
+
+        /* Simulador Interativo de Celular / Visão Computacional */
+        .phone-container {
+            position: relative;
+            width: 320px;
+            height: 640px;
+            margin: 0 auto;
+            background: #000;
+            border-radius: 40px;
+            border: 4px solid #222;
+            box-shadow: 0 0 50px rgba(118, 255, 3, 0.25), 0 0 0 12px #111;
+            overflow: hidden;
+        }
+
+        .phone-screen {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #05070a;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px 15px;
+        }
+
+        /* HUD Overlay no Celular */
+        .hud-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .hud-badge {
+            background: rgba(0, 0, 0, 0.75);
+            border: 1px solid var(--neon-lime);
+            padding: 6px 14px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .hud-title { font-size: 0.65rem; color: #fff; text-transform: uppercase; }
+        .hud-score { font-size: 1.8rem; font-weight: 900; color: var(--neon-lime); line-height: 1; }
+
+        .hud-status {
+            background: var(--neon-lime);
+            color: #000;
+            font-weight: 900;
+            font-size: 0.7rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            text-align: center;
+            margin-top: 10px;
+            text-transform: uppercase;
+        }
+
+        /* Canvas de Animação do Esqueleto */
+        #skeletonCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+        }
+
+        /* Seções do Site */
+        section {
+            padding: 90px 5%;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-family: var(--font-title);
+            font-size: 2.3rem;
+            color: var(--text-white);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .section-header h2 span { color: var(--neon-lime); }
+
+        .section-header p {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Grid de Cards dos Recursos */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-lime);
+            box-shadow: 0 10px 30px rgba(118, 255, 3, 0.15);
+            background: var(--bg-card-hover);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(118, 255, 3, 0.1);
+            border: 1px solid var(--neon-lime);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--neon-lime);
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            font-weight: 800;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Seção de Visão Computacional e Arquitetura */
+        .tech-box {
+            background: linear-gradient(135deg, var(--bg-card), #0d111a);
+            border: 1px solid var(--neon-lime);
+            border-radius: 20px;
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .tech-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .tech-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 0.95rem;
+        }
+
+        .tech-list li i {
+            color: var(--neon-lime);
+            font-size: 1.2rem;
+            margin-top: 3px;
+        }
+
+        /* Modos de Treino */
+        .modes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .mode-card {
+            background: var(--bg-card);
+            border-left: 4px solid var(--neon-lime);
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .mode-card h4 {
+            color: var(--neon-lime);
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            font-weight: 800;
+        }
+
+        /* Exercícios Suportados */
+        .exercise-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .tag {
+            background: rgba(18, 22, 32, 0.9);
+            border: 1px solid rgba(118, 255, 3, 0.3);
+            color: var(--text-white);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .tag:hover {
+            border-color: var(--neon-lime);
+            color: var(--neon-lime);
+            box-shadow: 0 0 15px var(--neon-lime-glow);
+        }
+
+        /* Footer */
+        footer {
+            background: #050608;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 40px 5%;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        footer strong { color: var(--neon-lime); }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 900px) {
+            .hero { grid-template-columns: 1fr; text-align: center; padding-top: 110px; }
+            .hero-content p { margin: 0 auto 30px; }
+            .hero-buttons { justify-content: center; }
+            .tech-box { grid-template-columns: 1fr; }
+            .modes-grid { grid-template-columns: 1fr; }
+            nav ul { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Chevrons Laterais no Estilo ZacGym App -->
+    <div class="chevron-left"></div>
+    <div class="chevron-right"></div>
+
+    <!-- Header / Navbar -->
+    <header>
+        <div class="logo">
+            ZACGYM <span>AI</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#como-funciona">Como Funciona</a></li>
+                <li><a href="#exercicios">Exercícios</a></li>
+                <li><a href="#tecnologia">IA & Biomecânica</a></li>
+                <li><a href="#modos">Modos</a></li>
+            </ul>
+        </nav>
+        <!-- Player de Áudio Synth Eletrônico NATIVO (Web Audio API Generator) -->
+        <button class="music-player-btn paused" id="musicToggleBtn" onclick="toggleAudioSynth()">
+            <i class="fa-solid fa-compact-disc fa-spin"></i>
+            <span id="musicBtnLabel">MÚSICA ELETRÔNICA</span>
+            <div class="equalizer-bars">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </button>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fa-solid fa-bolt"></i> Calisthenics & Posture AI
+            </div>
+            <h1>SUPERE SEUS LIMITES <span class="highlight">DENTRO E FORA</span> DA ACADEMIA</h1>
+            <p>O aplicativo de calistenia movido a inteligência artificial. Análise postural em tempo real com visão computacional, assistente de voz motivacional e rastreamento biomecânico.</p>
+            <div class="hero-buttons">
+                <a href="https://github.com" target="_blank" class="btn-primary">
+                    <i class="fa-brands fa-github"></i> Ver Código no GitHub
+                </a>
+                <a href="#como-funciona" class="btn-secondary">
+                    <i class="fa-solid fa-play"></i> Ver Demonstração
+                </a>
+            </div>
+        </div>
+
+        <!-- Phone Mockup com Simulador de IA -->
+        <div class="phone-container">
+            <div class="phone-screen">
+                <div class="hud-top">
+                    <div class="hud-badge">
+                        <div class="hud-title">FLEXÃO</div>
+                        <div class="hud-score" id="repCounter">0</div>
+                    </div>
+                    <div style="color: var(--neon-lime); font-size: 1.2rem;">
+                        <i class="fa-solid fa-volume-high"></i>
+                    </div>
+                </div>
+
+                <!-- Canvas com Renderização do Esqueleto NDK -->
+                <canvas id="skeletonCanvas"></canvas>
+
+                <div class="hud-status" id="postureStatus">
+                    POSTURA CORRETA
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Como Funciona -->
+    <section id="como-funciona">
+        <div class="section-header">
+            <h2>COMO O <span>ZACGYM</span> FUNCIONA?</h2>
+            <p>Engenharia de precisão que transforma a câmera do seu celular em um personal trainer altamente rigoroso.</p>
+        </div>
+
+        <div class="grid-3">
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-camera"></i></div>
+                <h3>Visão Computacional Ultra-Leve</h3>
+                <p>Processamento a 30+ FPS com resolução otimizada (320x240) e captura ultrarrápida via ML Kit em modo STREAM sem travar seu celular.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-expand"></i></div>
+                <h3>Deteção de Perspectiva Autônoma</h3>
+                <p>Identifica automaticamente se você está gravando de <strong>frente</strong> ou de <strong>perfil</strong> calculando a proporção entre ombros e tronco em tempo real.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-bullhorn"></i></div>
+                <h3>Assistente Motivacional de Voz</h3>
+                <p>Narra repetições em português, reconhece quando você está perto de bater seu recorde pessoal e manda frases como <em>"Vai Monstro!"</em> e <em>"NOVO RECORDE!"</em>.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exercícios Suportados -->
+    <section id="exercicios" style="background: rgba(18, 22, 32, 0.4);">
+        <div class="section-header">
+            <h2>EXERCÍCIOS <span>RECONHECIDOS</span></h2>
+            <p>Treine com validação estrita de ângulos nas articulações (ombro, cotovelo, quadril, joelho e tornozelo).</p>
+        </div>
+
+        <div class="exercise-tags">
+            <div class="tag"><i class="fa-solid fa-person-praying"></i> Flexão de Braço (Push-Up)</div>
+            <div class="tag"><i class="fa-solid fa-mattress-pillow"></i> Prancha Isométrica (Plank)</div>
+            <div class="tag"><i class="fa-solid fa-person"></i> Abdominal Flexão (Sit-Up)</div>
+            <div class="tag"><i class="fa-solid fa-child-reaching"></i> Agachamento (Squat)</div>
+            <div class="tag"><i class="fa-solid fa-person-running"></i> Burpee Dinâmico</div>
+            <div class="tag"><i class="fa-solid fa-frog"></i> Frog Stand</div>
+            <div class="tag"><i class="fa-solid fa-hand-holding-hand"></i> Parada de Mão (Handstand)</div>
+        </div>
+    </section>
+
+    <!-- Tecnologia & Biomecânica -->
+    <section id="tecnologia">
+        <div class="tech-box">
+            <div>
+                <h2 style="font-family: var(--font-title); font-size: 2rem; margin-bottom: 20px; text-transform: uppercase;">BIOMECÂNICA NATIVA EM <span style="color: var(--neon-lime);">C++ NDK</span></h2>
+                <p style="color: var(--text-muted); margin-bottom: 25px;">O ZacGym utiliza cálculos matemáticos executados diretamente em C++ nativo via JNI para performance instantânea e zero atraso visual.</p>
+                
+                <ul class="tech-list">
+                    <li><i class="fa-solid fa-check-circle"></i> <strong>Validação Espacial de Chão e Teto:</strong> Ângulo de inclinação do tronco que impede a prancha de ativar com você em pé ou deitado de costas.</li>
+                    <li><i class="fa-solid fa-check-circle"></i> <strong>Cálculos Vetoriais com Atan2:</strong> Validação de alinhamento 3-pontos (Ombro-Quadril-Tornozelo) para garantir corpo reto.</li>
+                    <li><i class="fa-solid fa-check-circle"></i> <strong>Câmera Frontal e Traseira:</strong> Re-espelhamento do esqueleto 2D automático para a lente ativa.</li>
+                </ul>
+            </div>
+
+            <div style="background: rgba(0, 0, 0, 0.6); padding: 25px; border-radius: 16px; border: 1px solid rgba(118, 255, 3, 0.3);">
+                <h4 style="color: var(--neon-lime); margin-bottom: 15px; font-family: var(--font-title);">MÉTRICAS DO SISTEMA</h4>
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #222;">
+                    <span>Processamento IA</span> <strong style="color: var(--neon-cyan);">~15 ms / frame</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #222;">
+                    <span>Resolução do Detector</span> <strong style="color: var(--neon-lime);">320 x 240 px</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #222;">
+                    <span>Frequência da Câmera</span> <strong style="color: var(--neon-lime);">30 FPS Fluidos</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding: 10px 0;">
+                    <span>Sintetizador de Voz</span> <strong style="color: var(--text-white);">TTS PT-BR Nativo</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modos de Treino & Social -->
+    <section id="modos">
+        <div class="section-header">
+            <h2>MODOS & <span>RECURSOS SOCIAIS</span></h2>
+            <p>Evolução contínua, histórico detalhado e compartilhamento instantâneo nas redes.</p>
+        </div>
+
+        <div class="modes-grid">
+            <div class="mode-card">
+                <h4><i class="fa-solid fa-stopwatch"></i> AMRAP 1 MINUTO</h4>
+                <p>O máximo de repetições em 60 segundos com contagem regressiva rigorosa e validação de postura.</p>
+            </div>
+            <div class="mode-card">
+                <h4><i class="fa-solid fa-rotate"></i> MODO TABATA</h4>
+                <p>Treino intervalado de alta intensidade com 20s de estímulo máximo e 10s de descanso automatizado.</p>
+            </div>
+            <div class="mode-card">
+                <h4><i class="fa-solid fa-share-nodes"></i> INSTAGRAM STORY 9:16</h4>
+                <p>Gere cards de conquista estilizados em Verde Neon com seus recordes e compartilhe com 1 clique.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 <strong>ZACGYM AI</strong>. Posture & Calisthenics System. Desenvolvido para máxima performance.</p>
+    </footer>
+
+    <!-- Script da Animação do Esqueleto e Sintetizador Web Audio API -->
+    <script>
+        /* --- 1. SIMULADOR DO ESQUELETO DE IA EM CANVAS --- */
+        const canvas = document.getElementById('skeletonCanvas');
+        const ctx = canvas.getContext('2d');
+        const repCounter = document.getElementById('repCounter');
+        const postureStatus = document.getElementById('postureStatus');
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        let t = 0;
+        let reps = 0;
+        let wasDown = false;
+
+        function drawSkeleton() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // Simulação de animação de flexão
+            t += 0.04;
+            const progress = (Math.sin(t) + 1) / 2; // 0 a 1
+
+            const shoulderY = h * 0.45 + progress * 40;
+            const elbowY = h * 0.52 + progress * 20;
+
+            const isCorrect = progress > 0.15; // Simula ajuste de postura
+
+            if (progress > 0.85 && !wasDown) {
+                wasDown = true;
+            } else if (progress < 0.15 && wasDown) {
+                wasDown = false;
+                reps++;
+                repCounter.innerText = reps;
+            }
+
+            if (isCorrect) {
+                postureStatus.innerText = "POSTURA CORRETA";
+                postureStatus.style.background = "#76ff03";
+                postureStatus.style.color = "#000";
+            } else {
+                postureStatus.innerText = "AJUSTE A POSTURA";
+                postureStatus.style.background = "#ff3344";
+                postureStatus.style.color = "#fff";
+            }
+
+            const jointColor = "#00f0ff";
+            const boneColor = isCorrect ? "#76ff03" : "#ff3344";
+
+            // Posição das articulações
+            const joints = {
+                head: { x: w * 0.3, y: shoulderY - 30 },
+                shoulder: { x: w * 0.4, y: shoulderY },
+                elbow: { x: w * 0.45, y: elbowY },
+                wrist: { x: w * 0.42, y: h * 0.65 },
+                hip: { x: w * 0.65, y: shoulderY + 10 },
+                knee: { x: w * 0.8, y: shoulderY + 15 },
+                ankle: { x: w * 0.9, y: shoulderY + 20 }
+            };
+
+            // Linhas de ossos do esqueleto
+            const bones = [
+                ['head', 'shoulder'],
+                ['shoulder', 'elbow'],
+                ['elbow', 'wrist'],
+                ['shoulder', 'hip'],
+                ['hip', 'knee'],
+                ['knee', 'ankle']
+            ];
+
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = boneColor;
+
+            bones.forEach(([start, end]) => {
+                ctx.beginPath();
+                ctx.moveTo(joints[start].x, joints[start].y);
+                ctx.lineTo(joints[end].x, joints[end].y);
+                ctx.stroke();
+            });
+
+            // Articulações
+            Object.values(joints).forEach(j => {
+                ctx.beginPath();
+                ctx.arc(j.x, j.y, 6, 0, Math.PI * 2);
+                ctx.fillStyle = jointColor;
+                ctx.fill();
+            });
+
+            requestAnimationFrame(drawSkeleton);
+        }
+        drawSkeleton();
+
+
+        /* --- 2. SINTETIZADOR DE MÚSICA ELETRÔNICA ADRENALINA (WEB AUDIO API) --- */
+        let audioCtx = null;
+        let isPlaying = false;
+        let timerId = null;
+
+        function toggleAudioSynth() {
+            const btn = document.getElementById('musicToggleBtn');
+            const label = document.getElementById('musicBtnLabel');
+
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            if (isPlaying) {
+                isPlaying = false;
+                clearInterval(timerId);
+                btn.classList.add('paused');
+                label.innerText = "PLAY MÚSICA";
+            } else {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                isPlaying = true;
+                btn.classList.remove('paused');
+                label.innerText = "PAUSAR MÚSICA";
+                startSynthLoop();
+            }
+        }
+
+        function startSynthLoop() {
+            let step = 0;
+            const tempo = 128; // BPM
+            const interval = (60 / tempo / 4) * 1000; // 16th notes
+
+            // Frequências para baixo Cyberpunk em C menor
+            const bassNotes = [130.81, 130.81, 155.56, 130.81, 174.61, 130.81, 116.54, 130.81];
+
+            timerId = setInterval(() => {
+                if (!isPlaying) return;
+
+                const time = audioCtx.currentTime;
+
+                // Kick Drum (a cada 4 passos)
+                if (step % 4 === 0) {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.frequency.setValueAtTime(150, time);
+                    osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.15);
+                    gain.gain.setValueAtTime(1, time);
+                    gain.gain.exponentialRampToValueAtTime(0.01, time + 0.15);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(time);
+                    osc.stop(time + 0.15);
+                }
+
+                // Synth Bass Adrenalina
+                const note = bassNotes[step % bassNotes.length];
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(note, time);
+
+                gain.gain.setValueAtTime(0.15, time);
+                gain.gain.exponentialRampToValueAtTime(0.01, time + 0.1);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(time);
+                osc.stop(time + 0.1);
+
+                step++;
+            }, interval);
+        }
+    </script>
+</body>
+</html>
