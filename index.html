@@ -600,7 +600,7 @@
                 <i class="fa-solid fa-bolt"></i> Calisthenics & Posture AI
             </div>
             <h1>SUPERES SEUS LIMITES <span class="highlight">DENTRO E FORA</span> DA ACADEMIA</h1>
-            <p>O aplicativo definitivo de calistenia com validação postural via Inteligência Artificial. Rastreamento biomecânico em tempo real com manequim 3D anatômico e rígido (sem esticar ou deformar) e coach de voz motivacional.</p>
+            <p>O aplicativo definitivo de calistenia com validação postural via Inteligência Artificial. Rastreamento biomecânico em tempo real com manequim 3D anatômico e rígido (sem deformação) e coach de voz motivacional.</p>
             <div class="hero-buttons">
                 <a href="https://wa.me/5521982814880?text=Ol%C3%A1!%20Vim%20pelo%20site%20do%20ZacGym" target="_blank" class="btn-whatsapp">
                     <i class="fa-brands fa-whatsapp fa-lg"></i> WhatsApp (21 982814880)
@@ -739,7 +739,7 @@
         <p>&copy; 2026 <strong>ZACGYM</strong> • Sistema de Calistenia e Correção Postural por Visão Computacional. Contato: (21) 982814880.</p>
     </footer>
 
-    <!-- ENGINE RIGIDA DE KINEMATICS E ANATOMIA HUMANA (ZERO STRETCH) -->
+    <!-- ENGINE RIGIDA DE KINEMATICS E ANATOMIA HUMANA EXATA -->
     <script>
         const canvas = document.getElementById('mannequinCanvas');
         const ctx = canvas.getContext('2d');
@@ -791,14 +791,13 @@
             document.getElementById('demo').scrollIntoView({ behavior: 'smooth' });
         }
 
-        /* --- PROPORÇÕES ANATÔMICAS RIGIDAS (INVARIÁVEIS) --- */
-        // NENHUMA DESTAS DIMENSÕES MUDA DE TAMANHO DURANTE O EXERCÍCIO!
-        const L_TORSO = 70;      // Tronco (Ombro -> Quadril)
-        const L_THIGH = 62;      // Coxa / Fêmur (Quadril -> Joelho)
-        const L_SHIN = 58;       // Canela / Tíbia (Joelho -> Tornozelo)
-        const L_UPPER_ARM = 42;  // Braço (Ombro -> Cotovelo)
-        const L_FOREARM = 38;    // Antebraço (Cotovelo -> Pulso)
-        const R_HEAD = 16;       // Raio da Cabeça
+        /* --- PROPORÇÕES ANATÔMICAS RÍGIDAS CONSTANTES --- */
+        const L_TORSO = 65;      // Tronco
+        const L_THIGH = 58;      // Fêmur / Coxa
+        const L_SHIN = 54;       // Tíbia / Canela
+        const L_UPPER_ARM = 38;  // Braço (Bíceps)
+        const L_FOREARM = 34;    // Antebraço
+        const R_HEAD = 15;       // Cabeça
 
         /* Desenho Anatômico de Membro Muscular com Gradiente e Contornos Reais */
         function drawAnatomicalLimb(p1, p2, wTop, wMid, wBot) {
@@ -809,21 +808,18 @@
 
             const ux = dx / len;
             const uy = dy / len;
-            const nx = -uy; // Normal perpendicular
+            const nx = -uy;
             const ny = ux;
 
             const pMid = { x: p1.x + dx * 0.35, y: p1.y + dy * 0.35 };
 
             const path = new Path2D();
-            // Lado Esquerdo do Músculo
             path.moveTo(p1.x + nx * wTop, p1.y + ny * wTop);
             path.quadraticCurveTo(pMid.x + nx * wMid, pMid.y + ny * wMid, p2.x + nx * wBot, p2.y + ny * wBot);
-            // Lado Direito do Músculo
             path.lineTo(p2.x - nx * wBot, p2.y - ny * wBot);
             path.quadraticCurveTo(pMid.x - nx * wMid, pMid.y - ny * wMid, p1.x - nx * wTop, p1.y - ny * wTop);
             path.closePath();
 
-            // Gradiente 3D com Volume Muscular
             const grad = ctx.createLinearGradient(p1.x - nx * wMid, p1.y - ny * wMid, p1.x + nx * wMid, p1.y + ny * wMid);
             grad.addColorStop(0, '#475569');
             grad.addColorStop(0.3, '#cbd5e1');
@@ -853,14 +849,13 @@
             ctx.stroke();
         }
 
-        /* 2-Segment Inverse Kinematics para Braços/Pernas Rigidos */
+        /* Cinemática Inversa 2-Segmentos */
         function ik2Segment(pStart, pTarget, l1, l2, flip) {
             const dx = pTarget.x - pStart.x;
             const dy = pTarget.y - pStart.y;
             const dist = Math.min(Math.hypot(dx, dy), l1 + l2 - 0.1);
             const baseAngle = Math.atan2(dy, dx);
 
-            // Lei dos Cossenos
             const cosAngle1 = (l1 * l1 + dist * dist - l2 * l2) / (2 * l1 * dist);
             const angle1 = Math.acos(Math.max(-1, Math.min(1, cosAngle1)));
 
@@ -877,61 +872,21 @@
             const h = canvas.height;
 
             animT += 0.035;
-            const cycle = (Math.sin(animT) + 1) / 2; // Oscilação suave 0..1..0
+            const cycle = (Math.sin(animT) + 1) / 2;
 
             let joints = {};
 
-            /* --- CÁLCULOS RIGIDOS RIGOROSOS (ZERO COMPRIMENTO VARIÁVEL) --- */
+            /* --- CÁLCULOS RIGOROSOS BASEADOS NAS FOTOS DE REFERÊNCIA --- */
 
-            if (currentExercise === 'SQUAT') {
-                // Tornozelo totalmente fixado no chão!
-                const ankle = { x: w * 0.48, y: h * 0.82 };
-                
-                // Ângulo da canela varia de 82 deg (em pé) até 52 deg (agachado)
-                const shinAngle = (82 - cycle * 30) * (Math.PI / 180);
-                const knee = {
-                    x: ankle.x + L_SHIN * Math.cos(shinAngle),
-                    y: ankle.y - L_SHIN * Math.sin(shinAngle)
-                };
+            if (currentExercise === 'PUSH_UP') {
+                // REFERÊNCIA: Imagem 1 (Corpo Reto em Prancha, Mãos Espalmadas no Chão)
+                const ankle = { x: w * 0.85, y: h * 0.68 };
+                const wrist = { x: w * 0.35, y: h * 0.68 };
 
-                // Ângulo do fêmur dobra para trás
-                const thighAngle = (20 + cycle * 55) * (Math.PI / 180);
-                const hip = {
-                    x: knee.x - L_THIGH * Math.cos(thighAngle),
-                    y: knee.y - L_THIGH * Math.sin(thighAngle)
-                };
-
-                // Tronco inclina levemente para equilibrar
-                const torsoAngle = (75 + cycle * 10) * (Math.PI / 180);
-                const shoulder = {
-                    x: hip.x + L_TORSO * Math.cos(torsoAngle),
-                    y: hip.y - L_TORSO * Math.sin(torsoAngle)
-                };
-
-                const head = {
-                    x: shoulder.x + (R_HEAD + 8) * Math.cos(torsoAngle),
-                    y: shoulder.y - (R_HEAD + 8) * Math.sin(torsoAngle)
-                };
-
-                // Braços estendidos para frente
-                const wristTarget = { x: shoulder.x - 65, y: shoulder.y + 10 };
-                const elbow = ik2Segment(shoulder, wristTarget, L_UPPER_ARM, L_FOREARM, true);
-
-                joints = { head, shoulder, elbow, wrist: wristTarget, hip, knee, ankle };
-
-                if (cycle > 0.85 && !wasPhaseCompleted) { wasPhaseCompleted = true; }
-                else if (cycle < 0.15 && wasPhaseCompleted) { wasPhaseCompleted = false; repCount++; repCounter.innerText = repCount; }
-
-            } else if (currentExercise === 'PUSH_UP') {
-                // Pés fixados no chão
-                const ankle = { x: w * 0.86, y: h * 0.68 };
-                const wrist = { x: w * 0.32, y: h * 0.68 };
-
-                // O corpo é um vetor rígido indeformável de (L_SHIN + L_THIGH + L_TORSO)
                 const bodyLen = L_SHIN + L_THIGH + L_TORSO;
-                const pushDepth = cycle * 38;
+                const pushDepth = cycle * 32;
 
-                const shoulder = { x: w * 0.32, y: h * 0.44 + pushDepth };
+                const shoulder = { x: w * 0.35, y: h * 0.46 + pushDepth };
                 const hip = {
                     x: shoulder.x + (ankle.x - shoulder.x) * (L_TORSO / bodyLen),
                     y: shoulder.y + (ankle.y - shoulder.y) * (L_TORSO / bodyLen)
@@ -940,7 +895,7 @@
                     x: hip.x + (ankle.x - hip.x) * (L_THIGH / (L_THIGH + L_SHIN)),
                     y: hip.y + (ankle.y - hip.y) * (L_THIGH / (L_THIGH + L_SHIN))
                 };
-                const head = { x: shoulder.x - 24, y: shoulder.y - 8 };
+                const head = { x: shoulder.x - 22, y: shoulder.y - 6 };
 
                 const elbow = ik2Segment(shoulder, wrist, L_UPPER_ARM, L_FOREARM, false);
 
@@ -950,14 +905,15 @@
                 else if (cycle < 0.15 && wasPhaseCompleted) { wasPhaseCompleted = false; repCount++; repCounter.innerText = repCount; }
 
             } else if (currentExercise === 'PLANK') {
+                // REFERÊNCIA: Imagem 2 (Prancha com Antebraço Apoiado e Corpo Reto)
                 const ankle = { x: w * 0.86, y: h * 0.68 };
-                const elbow = { x: w * 0.35, y: h * 0.68 };
-                const wrist = { x: w * 0.26, y: h * 0.68 };
+                const elbow = { x: w * 0.38, y: h * 0.68 };
+                const wrist = { x: w * 0.28, y: h * 0.68 };
 
                 const bodyLen = L_SHIN + L_THIGH + L_TORSO;
                 const micro = Math.sin(animT * 2) * 1.5;
 
-                const shoulder = { x: w * 0.35, y: h * 0.52 + micro };
+                const shoulder = { x: w * 0.38, y: h * 0.54 + micro };
                 const hip = {
                     x: shoulder.x + (ankle.x - shoulder.x) * (L_TORSO / bodyLen),
                     y: shoulder.y + (ankle.y - shoulder.y) * (L_TORSO / bodyLen)
@@ -966,55 +922,67 @@
                     x: hip.x + (ankle.x - hip.x) * (L_THIGH / (L_THIGH + L_SHIN)),
                     y: hip.y + (ankle.y - hip.y) * (L_THIGH / (L_THIGH + L_SHIN))
                 };
-                const head = { x: shoulder.x - 22, y: shoulder.y - 8 };
+                const head = { x: shoulder.x - 22, y: shoulder.y - 6 };
 
                 joints = { head, shoulder, elbow, wrist, hip, knee, ankle };
                 repCounter.innerText = Math.floor(animT * 2) + "s";
 
-            } else if (currentExercise === 'SIT_UP') {
-                const hip = { x: w * 0.58, y: h * 0.68 };
-                const ankle = { x: w * 0.82, y: h * 0.68 };
+            } else if (currentExercise === 'SQUAT') {
+                // REFERÊNCIA: Imagem 3 (Agachamento Profundo, Braços Estendidos para Frente, Pés Firmes)
+                const ankle = { x: w * 0.55, y: h * 0.80 };
                 
-                // Pernas dobradas fixas
-                const knee = { x: w * 0.70, y: h * 0.50 };
+                const shinAngle = (86 - cycle * 32) * (Math.PI / 180);
+                const knee = {
+                    x: ankle.x + L_SHIN * Math.cos(shinAngle),
+                    y: ankle.y - L_SHIN * Math.sin(shinAngle)
+                };
 
-                // Tronco rotaciona de 10 deg a 70 deg
-                const trunkAngle = (15 + cycle * 55) * (Math.PI / 180);
+                const thighAngle = (18 + cycle * 55) * (Math.PI / 180);
+                const hip = {
+                    x: knee.x - L_THIGH * Math.cos(thighAngle),
+                    y: knee.y - L_THIGH * Math.sin(thighAngle)
+                };
+
+                const torsoAngle = (78 + cycle * 12) * (Math.PI / 180);
                 const shoulder = {
-                    x: hip.x - L_TORSO * Math.cos(trunkAngle),
-                    y: hip.y - L_TORSO * Math.sin(trunkAngle)
+                    x: hip.x + L_TORSO * Math.cos(torsoAngle),
+                    y: hip.y - L_TORSO * Math.sin(torsoAngle)
                 };
+
                 const head = {
-                    x: shoulder.x - (R_HEAD + 8) * Math.cos(trunkAngle),
-                    y: shoulder.y - (R_HEAD + 8) * Math.sin(trunkAngle)
+                    x: shoulder.x + (R_HEAD + 6) * Math.cos(torsoAngle),
+                    y: shoulder.y - (R_HEAD + 6) * Math.sin(torsoAngle)
                 };
 
-                const wrist = { x: shoulder.x + 25, y: shoulder.y + 15 };
-                const elbow = ik2Segment(shoulder, wrist, L_UPPER_ARM, L_FOREARM, true);
+                const wristTarget = { x: shoulder.x - (L_UPPER_ARM + L_FOREARM) + 6, y: shoulder.y };
+                const elbow = ik2Segment(shoulder, wristTarget, L_UPPER_ARM, L_FOREARM, true);
 
-                joints = { head, shoulder, elbow, wrist, hip, knee, ankle };
+                joints = { head, shoulder, elbow, wrist: wristTarget, hip, knee, ankle };
 
                 if (cycle > 0.85 && !wasPhaseCompleted) { wasPhaseCompleted = true; }
                 else if (cycle < 0.15 && wasPhaseCompleted) { wasPhaseCompleted = false; repCount++; repCounter.innerText = repCount; }
 
             } else if (currentExercise === 'BURPEE') {
+                // REFERÊNCIA: Imagem 4 (4 Fases: Agachado Mãos no Chão -> Prancha -> Agachado -> Salto Vertical)
                 const phase = (animT % (Math.PI * 2)) / (Math.PI * 2);
-                if (phase < 0.33) {
-                    // Standing
-                    const ankle = { x: w * 0.50, y: h * 0.82 };
-                    const knee = { x: w * 0.50, y: ankle.y - L_SHIN };
-                    const hip = { x: w * 0.50, y: knee.y - L_THIGH };
-                    const shoulder = { x: w * 0.50, y: hip.y - L_TORSO };
-                    const head = { x: w * 0.50, y: shoulder.y - R_HEAD - 8 };
-                    const wrist = { x: w * 0.42, y: shoulder.y + 40 };
+                
+                if (phase < 0.25) {
+                    // Fase 1: Agachado com mãos no chão
+                    const ankle = { x: w * 0.52, y: h * 0.82 };
+                    const knee = { x: w * 0.62, y: h * 0.70 };
+                    const hip = { x: w * 0.44, y: h * 0.68 };
+                    const shoulder = { x: w * 0.38, y: h * 0.52 };
+                    const wrist = { x: w * 0.32, y: h * 0.82 };
+                    const head = { x: shoulder.x - 18, y: shoulder.y - 10 };
                     const elbow = ik2Segment(shoulder, wrist, L_UPPER_ARM, L_FOREARM, false);
                     joints = { head, shoulder, elbow, wrist, hip, knee, ankle };
-                } else if (phase < 0.66) {
-                    // Plank Position
-                    const ankle = { x: w * 0.86, y: h * 0.68 };
-                    const wrist = { x: w * 0.32, y: h * 0.68 };
+
+                } else if (phase < 0.50) {
+                    // Fase 2: Extensão em Prancha
+                    const ankle = { x: w * 0.85, y: h * 0.68 };
+                    const wrist = { x: w * 0.35, y: h * 0.68 };
                     const bodyLen = L_SHIN + L_THIGH + L_TORSO;
-                    const shoulder = { x: w * 0.32, y: h * 0.52 };
+                    const shoulder = { x: w * 0.35, y: h * 0.48 };
                     const hip = {
                         x: shoulder.x + (ankle.x - shoulder.x) * (L_TORSO / bodyLen),
                         y: shoulder.y + (ankle.y - shoulder.y) * (L_TORSO / bodyLen)
@@ -1023,36 +991,72 @@
                         x: hip.x + (ankle.x - hip.x) * (L_THIGH / (L_THIGH + L_SHIN)),
                         y: hip.y + (ankle.y - hip.y) * (L_THIGH / (L_THIGH + L_SHIN))
                     };
-                    const head = { x: shoulder.x - 22, y: shoulder.y - 8 };
+                    const head = { x: shoulder.x - 22, y: shoulder.y - 6 };
                     const elbow = ik2Segment(shoulder, wrist, L_UPPER_ARM, L_FOREARM, false);
                     joints = { head, shoulder, elbow, wrist, hip, knee, ankle };
+
+                } else if (phase < 0.75) {
+                    // Fase 3: Encolhimento de volta
+                    const ankle = { x: w * 0.52, y: h * 0.82 };
+                    const knee = { x: w * 0.62, y: h * 0.70 };
+                    const hip = { x: w * 0.44, y: h * 0.68 };
+                    const shoulder = { x: w * 0.38, y: h * 0.52 };
+                    const wrist = { x: w * 0.32, y: h * 0.82 };
+                    const head = { x: shoulder.x - 18, y: shoulder.y - 10 };
+                    const elbow = ik2Segment(shoulder, wrist, L_UPPER_ARM, L_FOREARM, false);
+                    joints = { head, shoulder, elbow, wrist, hip, knee, ankle };
+
                 } else {
-                    // Jump Extension
-                    const ankle = { x: w * 0.50, y: h * 0.72 };
+                    // Fase 4: Salto Vertical com braços erguidos acima da cabeça
+                    const ankle = { x: w * 0.50, y: h * 0.70 };
                     const knee = { x: w * 0.50, y: ankle.y - L_SHIN };
                     const hip = { x: w * 0.50, y: knee.y - L_THIGH };
                     const shoulder = { x: w * 0.50, y: hip.y - L_TORSO };
-                    const head = { x: w * 0.50, y: shoulder.y - R_HEAD - 8 };
-                    const wrist = { x: w * 0.50, y: shoulder.y - 50 };
-                    const elbow = { x: w * 0.50, y: shoulder.y - 25 };
+                    const head = { x: w * 0.50, y: shoulder.y - R_HEAD - 6 };
+                    const wrist = { x: w * 0.50, y: h * 0.12 };
+                    const elbow = { x: w * 0.50, y: h * 0.23 };
                     joints = { head, shoulder, elbow, wrist, hip, knee, ankle };
                 }
 
-                if (phase > 0.8 && !wasPhaseCompleted) { wasPhaseCompleted = true; repCount++; repCounter.innerText = repCount; }
-                else if (phase < 0.2) { wasPhaseCompleted = false; }
+                if (phase > 0.85 && !wasPhaseCompleted) { wasPhaseCompleted = true; repCount++; repCounter.innerText = repCount; }
+                else if (phase < 0.15) { wasPhaseCompleted = false; }
 
             } else if (currentExercise === 'FROG_STAND') {
-                const wrist = { x: w * 0.46, y: h * 0.72 };
-                const micro = Math.sin(animT * 3) * 2;
-                const shoulder = { x: w * 0.40, y: h * 0.52 + micro };
-                const head = { x: w * 0.28, y: h * 0.48 + micro };
-                const hip = { x: w * 0.60, y: h * 0.48 + micro };
-                const knee = { x: w * 0.52, y: h * 0.56 + micro };
-                const ankle = { x: w * 0.66, y: h * 0.52 + micro };
-                const elbow = ik2Segment(shoulder, wrist, L_UPPER_ARM, L_FOREARM, true);
+                // REFERÊNCIA: Imagem 5 (Frogstand / Crow Pose: Mãos no Solo, Cotovelos Dobrados, Joelhos Apoiados nos Cotovelos)
+                const micro = Math.sin(animT * 2.5) * 2;
+                const wrist = { x: w * 0.42, y: h * 0.75 };
+                const elbow = { x: w * 0.38, y: h * 0.60 };
+                const shoulder = { x: w * 0.44, y: h * 0.48 + micro };
+                const head = { x: w * 0.50, y: h * 0.52 + micro };
+                const hip = { x: w * 0.52, y: h * 0.38 + micro };
+                const knee = { x: w * 0.42, y: h * 0.52 + micro }; // Joelho apoiado no cotovelo!
+                const ankle = { x: w * 0.58, y: h * 0.46 + micro }; // Pés suspensos no ar
 
                 joints = { head, shoulder, elbow, wrist, hip, knee, ankle };
                 repCounter.innerText = Math.floor(animT * 2) + "s";
+
+            } else if (currentExercise === 'SIT_UP') {
+                const hip = { x: w * 0.58, y: h * 0.68 };
+                const ankle = { x: w * 0.82, y: h * 0.68 };
+                const knee = { x: w * 0.70, y: h * 0.50 };
+
+                const trunkAngle = (15 + cycle * 55) * (Math.PI / 180);
+                const shoulder = {
+                    x: hip.x - L_TORSO * Math.cos(trunkAngle),
+                    y: hip.y - L_TORSO * Math.sin(trunkAngle)
+                };
+                const head = {
+                    x: shoulder.x - (R_HEAD + 6) * Math.cos(trunkAngle),
+                    y: shoulder.y - (R_HEAD + 6) * Math.sin(trunkAngle)
+                };
+
+                const wrist = { x: shoulder.x + 22, y: shoulder.y + 12 };
+                const elbow = ik2Segment(shoulder, wrist, L_UPPER_ARM, L_FOREARM, true);
+
+                joints = { head, shoulder, elbow, wrist, hip, knee, ankle };
+
+                if (cycle > 0.85 && !wasPhaseCompleted) { wasPhaseCompleted = true; }
+                else if (cycle < 0.15 && wasPhaseCompleted) { wasPhaseCompleted = false; repCount++; repCounter.innerText = repCount; }
 
             } else if (currentExercise === 'HANDSTAND') {
                 const wrist = { x: w * 0.50, y: h * 0.80 };
@@ -1068,11 +1072,11 @@
                 repCounter.innerText = Math.floor(animT * 2) + "s";
             }
 
-            /* --- 1. DESENHO DO MANEQUIM 3D MUSCULAR ANATÔMICO --- */
+            /* --- DESENHO DO MANEQUIM 3D MUSCULAR ANATÔMICO --- */
 
-            // Cabeça Esférica 3D com Proporção Real
+            // Cabeça 3D
             const headGrad = ctx.createRadialGradient(
-                joints.head.x - 4, joints.head.y - 4, 2,
+                joints.head.x - 3, joints.head.y - 3, 2,
                 joints.head.x, joints.head.y, R_HEAD
             );
             headGrad.addColorStop(0, '#ffffff');
@@ -1087,20 +1091,20 @@
             ctx.lineWidth = 1.2;
             ctx.stroke();
 
-            // Membros com Contorno Muscular Tapered (Topo, Meio, Base)
-            drawAnatomicalLimb(joints.shoulder, joints.elbow, 11, 14, 9);  // Braço (Bíceps)
-            drawAnatomicalLimb(joints.elbow, joints.wrist, 9, 11, 7);      // Antebraço
-            drawAnatomicalLimb(joints.shoulder, joints.hip, 18, 17, 14);   // Torso
-            drawAnatomicalLimb(joints.hip, joints.knee, 16, 18, 12);       // Coxa (Quadríceps)
-            drawAnatomicalLimb(joints.knee, joints.ankle, 12, 14, 8);      // Panturrilha
+            // Desenho dos Membros (Comprimentos Invariáveis)
+            drawAnatomicalLimb(joints.shoulder, joints.elbow, 11, 13, 9);  // Braço
+            drawAnatomicalLimb(joints.elbow, joints.wrist, 9, 10, 7);      // Antebraço
+            drawAnatomicalLimb(joints.shoulder, joints.hip, 17, 16, 13);   // Torso
+            drawAnatomicalLimb(joints.hip, joints.knee, 15, 17, 11);       // Coxa
+            drawAnatomicalLimb(joints.knee, joints.ankle, 11, 13, 8);      // Panturrilha
 
-            // Articulações
+            // Articulações Cinza Esféricas
             [joints.shoulder, joints.elbow, joints.wrist, joints.hip, joints.knee, joints.ankle].forEach(j => {
-                draw3DJoint(j, 7.5);
+                draw3DJoint(j, 7);
             });
 
-            /* --- 2. ESQUELETO DE IA EM OVERLAY NEON (VERDE LIME / CIANO) --- */
-            ctx.lineWidth = 3;
+            /* --- ESQUELETO DE IA EM OVERLAY NEON --- */
+            ctx.lineWidth = 2.5;
             ctx.strokeStyle = '#76ff03';
 
             const bones = [
@@ -1119,10 +1123,10 @@
                 ctx.stroke();
             });
 
-            // Articulações Ciano
+            // Pontos Ciano
             [joints.head, joints.shoulder, joints.elbow, joints.wrist, joints.hip, joints.knee, joints.ankle].forEach(p => {
                 ctx.beginPath();
-                ctx.arc(p.x, p.y, 4.5, 0, Math.PI * 2);
+                ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
                 ctx.fillStyle = '#00f0ff';
                 ctx.fill();
             });
