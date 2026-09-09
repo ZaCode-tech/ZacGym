@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZacGym AI - Posture & Calisthenics AI</title>
-    <!-- Google Fonts: Inter & Orbitron para visual Cyberpunk/Esportivo -->
+    <title>ZacGym - Posture & Calisthenics System</title>
+    <!-- Google Fonts: Inter & Orbitron para estilo esportivo/cyberpunk -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -34,6 +34,1071 @@
         }
 
         body {
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Setas Verdes Decorativas Laterais (Estilo ZacGym) */
+        .chevron-left, .chevron-right {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-style: solid;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.6;
+            animation: pulseChevron 2s infinite alternate;
+        }
+
+        .chevron-left {
+            left: 0;
+            border-width: 60px 0 60px 40px;
+            border-color: transparent transparent transparent var(--neon-lime);
+            filter: drop-shadow(0 0 15px var(--neon-lime));
+        }
+
+        .chevron-right {
+            right: 0;
+            border-width: 60px 40px 60px 0;
+            border-color: transparent var(--neon-lime) transparent transparent;
+            filter: drop-shadow(0 0 15px var(--neon-lime));
+        }
+
+        @keyframes pulseChevron {
+            0% { opacity: 0.3; transform: translateY(-50%) scale(0.9); }
+            100% { opacity: 0.8; transform: translateY(-50%) scale(1.1); }
+        }
+
+        /* Navbar */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(9, 10, 14, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(118, 255, 3, 0.2);
+            z-index: 1000;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--font-title);
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--neon-lime);
+            text-shadow: 0 0 12px var(--neon-lime-glow);
+            letter-spacing: 4px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            color: var(--text-white);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--neon-lime);
+            text-shadow: 0 0 8px var(--neon-lime);
+        }
+
+        /* Player de Música Eletrônica */
+        .music-player-btn {
+            background: rgba(18, 22, 32, 0.9);
+            border: 2px solid var(--neon-lime);
+            color: var(--neon-lime);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 0 15px rgba(118, 255, 3, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .music-player-btn:hover {
+            background: var(--neon-lime);
+            color: #000;
+            box-shadow: 0 0 25px var(--neon-lime);
+        }
+
+        .equalizer-bars {
+            display: flex;
+            gap: 3px;
+            height: 14px;
+            align-items: flex-end;
+        }
+
+        .bar {
+            width: 3px;
+            height: 100%;
+            background: var(--neon-lime);
+            border-radius: 2px;
+            animation: bounce 0.6s infinite ease-in-out alternate;
+        }
+
+        .music-player-btn:hover .bar { background: #000; }
+        .bar:nth-child(2) { animation-delay: 0.2s; }
+        .bar:nth-child(3) { animation-delay: 0.4s; }
+
+        .paused .bar {
+            animation-play-state: paused;
+            height: 4px !important;
+        }
+
+        @keyframes bounce {
+            0% { height: 4px; }
+            100% { height: 16px; }
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            padding: 130px 5% 60px;
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            align-items: center;
+            gap: 40px;
+            background: radial-gradient(circle at 20% 30%, rgba(118, 255, 3, 0.08) 0%, transparent 60%);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(118, 255, 3, 0.1);
+            border: 1px solid var(--neon-lime);
+            color: var(--neon-lime);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .hero-content h1 {
+            font-family: var(--font-title);
+            font-size: 3.2rem;
+            line-height: 1.1;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .hero-content h1 .highlight {
+            color: var(--neon-lime);
+            text-shadow: 0 0 20px var(--neon-lime-glow);
+        }
+
+        .hero-content p {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            max-width: 520px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: #000;
+            font-weight: 900;
+            font-size: 0.95rem;
+            padding: 16px 28px;
+            border-radius: 12px;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-whatsapp:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 0 35px #25D366;
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-white);
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 16px 28px;
+            border-radius: 12px;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--neon-lime);
+            color: var(--neon-lime);
+            box-shadow: 0 0 15px var(--neon-lime-glow);
+        }
+
+        /* Simulador Duplo de Celular no Hero (Demo 3D + Layout Real) */
+        .mockups-wrapper {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .phone-container {
+            position: relative;
+            width: 290px;
+            height: 580px;
+            background: #000;
+            border-radius: 36px;
+            border: 4px solid #222;
+            box-shadow: 0 0 40px rgba(118, 255, 3, 0.2), 0 0 0 8px #111;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .phone-screen {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #05070a;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 16px 12px;
+        }
+
+        /* HUD Superior */
+        .hud-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .hud-badge {
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid var(--neon-lime);
+            padding: 5px 12px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .hud-title { font-size: 0.6rem; color: #fff; text-transform: uppercase; font-weight: 800; }
+        .hud-score { font-size: 1.6rem; font-weight: 900; color: var(--neon-lime); line-height: 1; }
+
+        .hud-status {
+            background: var(--neon-lime);
+            color: #000;
+            font-weight: 900;
+            font-size: 0.65rem;
+            padding: 5px 10px;
+            border-radius: 6px;
+            text-align: center;
+            text-transform: uppercase;
+            z-index: 10;
+            letter-spacing: 1px;
+        }
+
+        /* Canvas do Manequim 3D Cinza */
+        #mannequinCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 5;
+        }
+
+        /* Layout Real do Aplicativo ZacGym (Mockup 2) */
+        .app-layout-screen {
+            background: #090a0e;
+            height: 100%;
+            overflow-y: auto;
+            padding: 15px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-family: var(--font-body);
+        }
+
+        .app-layout-screen::-webkit-scrollbar { width: 0; }
+
+        .app-header-title {
+            text-align: center;
+            color: var(--neon-lime);
+            font-family: var(--font-title);
+            font-size: 1.6rem;
+            font-weight: 900;
+            letter-spacing: 3px;
+        }
+
+        .app-header-subtitle {
+            text-align: center;
+            color: #fff;
+            font-size: 0.6rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .btn-history-app {
+            background: #1e293b;
+            border: 1px solid var(--neon-lime);
+            color: var(--neon-lime);
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 6px;
+            border-radius: 8px;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .app-exercise-btn {
+            background: linear-gradient(90deg, #1b3d00, #121620, #090a0e);
+            border: 1.5px solid var(--neon-lime);
+            color: #fff;
+            font-weight: 900;
+            font-size: 0.75rem;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .app-exercise-btn:hover, .app-exercise-btn.active {
+            background: var(--neon-lime);
+            color: #000;
+            box-shadow: 0 0 12px var(--neon-lime);
+        }
+
+        .app-records-card {
+            background: #121620;
+            border: 1px solid rgba(118, 255, 3, 0.4);
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 5px;
+        }
+
+        .app-records-title {
+            color: var(--neon-lime);
+            font-size: 0.65rem;
+            font-weight: 900;
+            margin-bottom: 6px;
+        }
+
+        .record-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.65rem;
+            color: #e2e8f0;
+            margin-bottom: 3px;
+        }
+
+        .record-row strong { color: var(--neon-lime); }
+
+        /* Seção Exercícios Reconhecidos Interativa */
+        section { padding: 80px 5%; }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-family: var(--font-title);
+            font-size: 2.2rem;
+            color: var(--text-white);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .section-header h2 span { color: var(--neon-lime); }
+
+        .section-header p {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 0.95rem;
+        }
+
+        .exercise-list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .exercise-item-btn {
+            background: rgba(18, 22, 32, 0.9);
+            border: 1.5px solid rgba(118, 255, 3, 0.3);
+            color: var(--text-white);
+            padding: 16px 24px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .exercise-item-btn:hover, .exercise-item-btn.active {
+            border-color: var(--neon-lime);
+            background: var(--neon-lime);
+            color: #000;
+            box-shadow: 0 0 20px var(--neon-lime-glow);
+            transform: scale(1.02);
+        }
+
+        .exercise-item-btn i { font-size: 1.2rem; }
+
+        /* Cards do Como Funciona */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 28px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-lime);
+            box-shadow: 0 10px 30px rgba(118, 255, 3, 0.15);
+        }
+
+        .card-icon {
+            width: 55px;
+            height: 55px;
+            background: rgba(118, 255, 3, 0.1);
+            border: 1px solid var(--neon-lime);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: var(--neon-lime);
+            margin-bottom: 18px;
+        }
+
+        .card h3 { font-size: 1.2rem; margin-bottom: 10px; font-weight: 800; }
+        .card p { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* Banner de Contato do WhatsApp */
+        .cta-whatsapp-banner {
+            background: linear-gradient(135deg, #121620, #090a0e);
+            border: 2px solid #25D366;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-top: 40px;
+            box-shadow: 0 0 30px rgba(37, 211, 102, 0.2);
+        }
+
+        .cta-whatsapp-banner h3 {
+            font-family: var(--font-title);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .cta-whatsapp-banner p {
+            color: var(--text-muted);
+            margin-bottom: 25px;
+        }
+
+        /* Footer */
+        footer {
+            background: #050608;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 35px 5%;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        footer strong { color: var(--neon-lime); }
+
+        @media (max-width: 950px) {
+            .hero { grid-template-columns: 1fr; text-align: center; padding-top: 110px; }
+            .hero-content p { margin: 0 auto 30px; }
+            .hero-buttons { justify-content: center; }
+            .mockups-wrapper { flex-direction: column; }
+            nav ul { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chevron-left"></div>
+    <div class="chevron-right"></div>
+
+    <!-- Header / Navbar -->
+    <header>
+        <div class="logo">ZACGYM</div>
+        <nav>
+            <ul>
+                <li><a href="#demo">Demonstração 3D</a></li>
+                <li><a href="#exercicios">Exercícios</a></li>
+                <li><a href="#como-funciona">Como Funciona</a></li>
+                <li><a href="#contato">Contato</a></li>
+            </ul>
+        </nav>
+        <button class="music-player-btn paused" id="musicToggleBtn" onclick="toggleAudioSynth()">
+            <i class="fa-solid fa-compact-disc fa-spin"></i>
+            <span id="musicBtnLabel">MÚSICA ELETRÔNICA</span>
+            <div class="equalizer-bars">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+        </button>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="demo">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fa-solid fa-bolt"></i> Calisthenics & Posture AI
+            </div>
+            <h1>SUPERES SEUS LIMITES <span class="highlight">DENTRO E FORA</span> DA ACADEMIA</h1>
+            <p>O aplicativo definitivo de calistenia com validação postural via Inteligência Artificial. Rastreamento biomecânico em tempo real com manequim 3D e coach de voz motivacional.</p>
+            <div class="hero-buttons">
+                <a href="https://wa.me/5521982814880?text=Ol%C3%A1!%20Vim%20pelo%20site%20do%20ZacGym" target="_blank" class="btn-whatsapp">
+                    <i class="fa-brands fa-whatsapp fa-lg"></i> Falar no WhatsApp (21 982814880)
+                </a>
+                <a href="#exercicios" class="btn-secondary">
+                    <i class="fa-solid fa-play"></i> Escolher Exercício
+                </a>
+            </div>
+        </div>
+
+        <!-- Mockups: Simulador 3D + Layout Real do App -->
+        <div class="mockups-wrapper">
+            
+            <!-- Celular 1: Simulador de Manequim 3D com Esqueleto IA -->
+            <div class="phone-container">
+                <div class="phone-screen">
+                    <div class="hud-top">
+                        <div class="hud-badge">
+                            <div class="hud-title" id="demoExerciseName">FLEXÃO</div>
+                            <div class="hud-score" id="repCounter">0</div>
+                        </div>
+                        <div style="color: var(--neon-lime); font-size: 1.1rem;">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </div>
+                    </div>
+
+                    <!-- Canvas onde é desenhado o manequim cinza 3D -->
+                    <canvas id="mannequinCanvas"></canvas>
+
+                    <div class="hud-status" id="postureStatus">POSTURA CORRETA</div>
+                </div>
+            </div>
+
+            <!-- Celular 2: Layout Real do Aplicativo ZacGym -->
+            <div class="phone-container">
+                <div class="phone-screen">
+                    <div class="app-layout-screen">
+                        <div class="app-header-title">ZACGYM</div>
+                        <div class="app-header-subtitle">SUPERES SEUS LIMITES<br>DENTRO E FORA DA ACADEMIA</div>
+                        
+                        <div class="btn-history-app">📊 VER HISTÓRICO & EVOLUÇÃO</div>
+
+                        <div class="app-exercise-btn active" onclick="switchExercise('PUSH_UP')">FLEXÃO</div>
+                        <div class="app-exercise-btn" onclick="switchExercise('PLANK')">PRANCHA</div>
+                        <div class="app-exercise-btn" onclick="switchExercise('SIT_UP')">ABDOMINAL</div>
+                        <div class="app-exercise-btn" onclick="switchExercise('SQUAT')">AGACHAMENTO</div>
+                        <div class="app-exercise-btn" onclick="switchExercise('BURPEE')">BURPEE</div>
+                        <div class="app-exercise-btn" onclick="switchExercise('FROG_STAND')">FROG STAND</div>
+                        <div class="app-exercise-btn" onclick="switchExercise('HANDSTAND')">HANDSTAND</div>
+
+                        <div class="app-records-card">
+                            <div class="app-records-title">⚡ RECORDES PESSOAIS</div>
+                            <div class="record-row"><span>FLEXÃO</span><strong>33 reps</strong></div>
+                            <div class="record-row"><span>PRANCHA</span><strong>34s</strong></div>
+                            <div class="record-row"><span>ABDOMINAL</span><strong>23 reps</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Seção de Exercícios Reconhecidos Interativos -->
+    <section id="exercicios" style="background: rgba(18, 22, 32, 0.4);">
+        <div class="section-header">
+            <h2>EXERCÍCIOS <span>RECONHECIDOS</span></h2>
+            <p>Clique em qualquer exercício abaixo para ver a demonstração do manequim 3D em tempo real no simulador acima!</p>
+        </div>
+
+        <div class="exercise-list-container">
+            <button class="exercise-item-btn active" onclick="selectExerciseAndScroll('PUSH_UP')">
+                <span><i class="fa-solid fa-person-praying"></i> Flexão de Braço (Push-Up)</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+            <button class="exercise-item-btn" onclick="selectExerciseAndScroll('PLANK')">
+                <span><i class="fa-solid fa-mattress-pillow"></i> Prancha Isométrica (Prancha)</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+            <button class="exercise-item-btn" onclick="selectExerciseAndScroll('SIT_UP')">
+                <span><i class="fa-solid fa-person"></i> Flexão abdominal (Sit-Up)</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+            <button class="exercise-item-btn" onclick="selectExerciseAndScroll('SQUAT')">
+                <span><i class="fa-solid fa-child-reaching"></i> Agachamento (Agachamento)</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+            <button class="exercise-item-btn" onclick="selectExerciseAndScroll('BURPEE')">
+                <span><i class="fa-solid fa-person-running"></i> Burpee Dinâmico</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+            <button class="exercise-item-btn" onclick="selectExerciseAndScroll('FROG_STAND')">
+                <span><i class="fa-solid fa-frog"></i> Suporte para sapos (Frog Stand)</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+            <button class="exercise-item-btn" onclick="selectExerciseAndScroll('HANDSTAND')">
+                <span><i class="fa-solid fa-hand-holding-hand"></i> Parada de Mão (Handstand)</span>
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- Como Funciona -->
+    <section id="como-funciona">
+        <div class="section-header">
+            <h2>TECNOLOGIA & <span>RECURSOS</span></h2>
+            <p>Engenharia de precisão para transformar o celular em um personal trainer implacável.</p>
+        </div>
+
+        <div class="grid-3">
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-eye"></i></div>
+                <h3>Visão Computacional Acelerada</h3>
+                <p>Processamento a 30+ FPS com modelo ultraleve STREAM MODE para detecção instantânea sem aquecer o dispositivo.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-arrows-split-up-and-left"></i></div>
+                <h3>Câmeras Frontal e Traseira</h3>
+                <p>Alternância suave entre lentes com auto-espelhamento e ajuste de perspectiva (Frente vs. Perfil).</p>
+            </div>
+
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-volume-high"></i></div>
+                <h3>Coach de Voz Motivacional</h3>
+                <p>Narra cada repetição e motiva você quando está prestes a quebrar o seu recorde pessoal: <em>"Vai Monstro!"</em>.</p>
+            </div>
+        </div>
+
+        <!-- Banner WhatsApp -->
+        <div class="cta-whatsapp-banner" id="contato">
+            <h3>QUER LEVAR O ZACGYM PARA SUA ACADEMIA OU TREINO?</h3>
+            <p>Entre em contato diretamente com o desenvolvedor para suporte, ideias e parcerias.</p>
+            <a href="https://wa.me/5521982814880?text=Ol%C3%A1!%20Gostaria%20de%20saber%20mais%20sobre%20o%20ZacGym!" target="_blank" class="btn-whatsapp">
+                <i class="fa-brands fa-whatsapp fa-xl"></i> Falar com Isac no WhatsApp (21 982814880)
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 <strong>ZACGYM</strong> • Sistema de Calistenia e Correção Postural por Visão Computacional. Contato: (21) 982814880.</p>
+    </footer>
+
+    <!-- LÓGICA DO MANEQUIM 3D CINZA E SINTETIZADOR DE ÁUDIO -->
+    <script>
+        /* --- 1. RENDERIZADOR DO MANEQUIM 3D CINZA COM ESQUELETO DE IA --- */
+        const canvas = document.getElementById('mannequinCanvas');
+        const ctx = canvas.getContext('2d');
+        const repCounter = document.getElementById('repCounter');
+        const postureStatus = document.getElementById('postureStatus');
+        const demoExerciseName = document.getElementById('demoExerciseName');
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        let currentExercise = 'PUSH_UP';
+        let animT = 0;
+        let repCount = 0;
+        let wasPhaseCompleted = false;
+
+        const exerciseTitles = {
+            'PUSH_UP': 'FLEXÃO',
+            'PLANK': 'PRANCHA',
+            'SIT_UP': 'ABDOMINAL',
+            'SQUAT': 'AGACHAMENTO',
+            'BURPEE': 'BURPEE',
+            'FROG_STAND': 'FROG STAND',
+            'HANDSTAND': 'HANDSTAND'
+        };
+
+        function switchExercise(type) {
+            currentExercise = type;
+            demoExerciseName.innerText = exerciseTitles[type] || 'FLEXÃO';
+            repCount = 0;
+            repCounter.innerText = '0';
+            wasPhaseCompleted = false;
+
+            // Atualiza botões ativos no layout do app e na lista
+            document.querySelectorAll('.app-exercise-btn, .exercise-item-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+        }
+
+        function selectExerciseAndScroll(type) {
+            switchExercise(type);
+            document.getElementById('demo').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Desenha membros anatômicos cinzas 3D com iluminação e degradê
+        function draw3DLimb(p1, p2, width1, width2) {
+            const dx = p2.x - p1.x;
+            const dy = p2.y - p1.y;
+            const len = Math.sqrt(dx * dx + dy * dy);
+            if (len === 0) return;
+
+            const nx = -dy / len;
+            const ny = dx / len;
+
+            const path = new Path2D();
+            path.moveTo(p1.x + nx * width1, p1.y + ny * width1);
+            path.lineTo(p2.x + nx * width2, p2.y + ny * width2);
+            path.lineTo(p2.x - nx * width2, p2.y - ny * width2);
+            path.lineTo(p1.x - nx * width1, p1.y - ny * width1);
+            path.closePath();
+
+            // Gradiente Cinza Manequim 3D
+            const grad = ctx.createLinearGradient(p1.x, p1.y, p1.x + nx * width1 * 2, p1.y + ny * width1 * 2);
+            grad.addColorStop(0, '#e2e8f0');
+            grad.addColorStop(0.5, '#94a3b8');
+            grad.addColorStop(1, '#475569');
+
+            ctx.fillStyle = grad;
+            ctx.fill(path);
+            ctx.strokeStyle = '#334155';
+            ctx.lineWidth = 1.5;
+            ctx.stroke(path);
+        }
+
+        function draw3DJoint(p, radius) {
+            const grad = ctx.createRadialGradient(p.x - radius * 0.3, p.y - radius * 0.3, radius * 0.1, p.x, p.y, radius);
+            grad.addColorStop(0, '#f8fafc');
+            grad.addColorStop(0.6, '#94a3b8');
+            grad.addColorStop(1, '#334155');
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+            ctx.fillStyle = grad;
+            ctx.fill();
+            ctx.strokeStyle = '#1e293b';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+
+        function renderMannequinLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const w = canvas.width;
+            const h = canvas.height;
+
+            animT += 0.035;
+            const cycle = (Math.sin(animT) + 1) / 2; // 0 a 1
+
+            let joints = {};
+            let isPostureGood = true;
+
+            // Calcula posições das articulações baseadas no exercício ativo
+            if (currentExercise === 'PUSH_UP') {
+                const bodyY = h * 0.48 + cycle * 45;
+                joints = {
+                    head: { x: w * 0.22, y: bodyY - 15 },
+                    shoulder: { x: w * 0.35, y: bodyY },
+                    elbow: { x: w * 0.38, y: bodyY + 30 - cycle * 10 },
+                    wrist: { x: w * 0.36, y: h * 0.68 },
+                    hip: { x: w * 0.62, y: bodyY + 5 },
+                    knee: { x: w * 0.78, y: bodyY + 10 },
+                    ankle: { x: w * 0.90, y: bodyY + 15 }
+                };
+                if (cycle > 0.85 && !wasPhaseCompleted) { wasPhaseCompleted = true; }
+                else if (cycle < 0.15 && wasPhaseCompleted) { wasPhaseCompleted = false; repCount++; repCounter.innerText = repCount; }
+
+            } else if (currentExercise === 'PLANK') {
+                const microMove = Math.sin(animT * 2) * 3;
+                joints = {
+                    head: { x: w * 0.22, y: h * 0.52 + microMove },
+                    shoulder: { x: w * 0.35, y: h * 0.55 + microMove },
+                    elbow: { x: w * 0.35, y: h * 0.68 },
+                    wrist: { x: w * 0.42, y: h * 0.68 },
+                    hip: { x: w * 0.62, y: h * 0.55 + microMove },
+                    knee: { x: w * 0.78, y: h * 0.56 + microMove },
+                    ankle: { x: w * 0.90, y: h * 0.57 + microMove }
+                };
+                repCounter.innerText = Math.floor(animT * 2) + "s";
+
+            } else if (currentExercise === 'SIT_UP') {
+                const crunch = cycle * 0.7;
+                joints = {
+                    head: { x: w * 0.35 - crunch * 30, y: h * 0.62 - crunch * 60 },
+                    shoulder: { x: w * 0.42 - crunch * 25, y: h * 0.65 - crunch * 50 },
+                    elbow: { x: w * 0.48, y: h * 0.60 - crunch * 40 },
+                    wrist: { x: w * 0.52, y: h * 0.55 - crunch * 30 },
+                    hip: { x: w * 0.58, y: h * 0.66 },
+                    knee: { x: w * 0.72, y: h * 0.50 },
+                    ankle: { x: w * 0.82, y: h * 0.66 }
+                };
+                if (cycle > 0.85 && !wasPhaseCompleted) { wasPhaseCompleted = true; }
+                else if (cycle < 0.15 && wasPhaseCompleted) { wasPhaseCompleted = false; repCount++; repCounter.innerText = repCount; }
+
+            } else if (currentExercise === 'SQUAT') {
+                const squatDepth = cycle * 80;
+                joints = {
+                    head: { x: w * 0.50, y: h * 0.20 + squatDepth },
+                    shoulder: { x: w * 0.50, y: h * 0.30 + squatDepth },
+                    elbow: { x: w * 0.42, y: h * 0.38 + squatDepth },
+                    wrist: { x: w * 0.45, y: h * 0.32 + squatDepth },
+                    hip: { x: w * 0.48, y: h * 0.50 + squatDepth },
+                    knee: { x: w * 0.60 + cycle * 10, y: h * 0.65 + squatDepth * 0.3 },
+                    ankle: { x: w * 0.52, y: h * 0.82 }
+                };
+                if (cycle > 0.85 && !wasPhaseCompleted) { wasPhaseCompleted = true; }
+                else if (cycle < 0.15 && wasPhaseCompleted) { wasPhaseCompleted = false; repCount++; repCounter.innerText = repCount; }
+
+            } else if (currentExercise === 'BURPEE') {
+                const phase = (animT % (Math.PI * 2)) / (Math.PI * 2);
+                let py = h * 0.5;
+                if (phase < 0.33) {
+                    py = h * 0.3; // Em pé
+                } else if (phase < 0.66) {
+                    py = h * 0.65; // Prancha
+                } else {
+                    py = h * 0.2; // Salto
+                }
+                joints = {
+                    head: { x: w * 0.45, y: py - 40 },
+                    shoulder: { x: w * 0.45, y: py - 20 },
+                    elbow: { x: w * 0.38, y: py },
+                    wrist: { x: w * 0.38, y: py + 20 },
+                    hip: { x: w * 0.46, y: py + 30 },
+                    knee: { x: w * 0.47, y: py + 70 },
+                    ankle: { x: w * 0.48, y: py + 110 }
+                };
+                if (phase > 0.8 && !wasPhaseCompleted) { wasPhaseCompleted = true; repCount++; repCounter.innerText = repCount; }
+                else if (phase < 0.2) { wasPhaseCompleted = false; }
+
+            } else if (currentExercise === 'FROG_STAND') {
+                const micro = Math.sin(animT * 3) * 4;
+                joints = {
+                    head: { x: w * 0.35, y: h * 0.48 + micro },
+                    shoulder: { x: w * 0.45, y: h * 0.52 + micro },
+                    elbow: { x: w * 0.47, y: h * 0.64 },
+                    wrist: { x: w * 0.47, y: h * 0.76 },
+                    hip: { x: w * 0.58, y: h * 0.46 + micro },
+                    knee: { x: w * 0.52, y: h * 0.58 + micro },
+                    ankle: { x: w * 0.66, y: h * 0.48 + micro }
+                };
+                repCounter.innerText = Math.floor(animT * 2) + "s";
+
+            } else if (currentExercise === 'HANDSTAND') {
+                const sway = Math.sin(animT * 2) * 6;
+                joints = {
+                    head: { x: w * 0.50 + sway * 0.3, y: h * 0.65 },
+                    shoulder: { x: w * 0.50 + sway * 0.4, y: h * 0.55 },
+                    elbow: { x: w * 0.50 + sway * 0.2, y: h * 0.68 },
+                    wrist: { x: w * 0.50, y: h * 0.80 },
+                    hip: { x: w * 0.50 + sway * 0.7, y: h * 0.38 },
+                    knee: { x: w * 0.50 + sway * 0.9, y: h * 0.24 },
+                    ankle: { x: w * 0.50 + sway, y: h * 0.12 }
+                };
+                repCounter.innerText = Math.floor(animT * 2) + "s";
+            }
+
+            // 1. DESENHA CORPO E MEMBROS DO MANEQUIM CINZA 3D
+            // Cabeça 3D
+            const headGrad = ctx.createRadialGradient(
+                joints.head.x - 5, joints.head.y - 5, 3,
+                joints.head.x, joints.head.y, 18
+            );
+            headGrad.addColorStop(0, '#ffffff');
+            headGrad.addColorStop(0.5, '#94a3b8');
+            headGrad.addColorStop(1, '#334155');
+
+            ctx.beginPath();
+            ctx.arc(joints.head.x, joints.head.y, 18, 0, Math.PI * 2);
+            ctx.fillStyle = headGrad;
+            ctx.fill();
+            ctx.strokeStyle = '#1e293b';
+            ctx.stroke();
+
+            // Membros Anatômicos com Espessura
+            draw3DLimb(joints.shoulder, joints.elbow, 12, 10);
+            draw3DLimb(joints.elbow, joints.wrist, 10, 8);
+            draw3DLimb(joints.shoulder, joints.hip, 18, 15);
+            draw3DLimb(joints.hip, joints.knee, 16, 12);
+            draw3DLimb(joints.knee, joints.ankle, 12, 9);
+
+            // Articulações Cinza Esféricas
+            [joints.shoulder, joints.elbow, joints.wrist, joints.hip, joints.knee, joints.ankle].forEach(j => {
+                draw3DJoint(j, 9);
+            });
+
+            // 2. OVERLAY DO ESQUELETO DA IA (VERDE LIME E CIANO)
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = isPostureGood ? '#76ff03' : '#ff3344';
+
+            const bones = [
+                [joints.head, joints.shoulder],
+                [joints.shoulder, joints.elbow],
+                [joints.elbow, joints.wrist],
+                [joints.shoulder, joints.hip],
+                [joints.hip, joints.knee],
+                [joints.knee, joints.ankle]
+            ];
+
+            bones.forEach(([p1, p2]) => {
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+            });
+
+            // Pontos Neon do Rastreamento
+            [joints.head, joints.shoulder, joints.elbow, joints.wrist, joints.hip, joints.knee, joints.ankle].forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+                ctx.fillStyle = '#00f0ff';
+                ctx.fill();
+            });
+
+            postureStatus.innerText = "POSTURA CORRETA";
+            postureStatus.style.background = "#76ff03";
+            postureStatus.style.color = "#000";
+
+            requestAnimationFrame(renderMannequinLoop);
+        }
+        renderMannequinLoop();
+
+
+        /* --- 2. SINTETIZADOR DE MÚSICA ELETRÔNICA (WEB AUDIO API) --- */
+        let audioCtx = null;
+        let isPlaying = false;
+        let timerId = null;
+
+        function toggleAudioSynth() {
+            const btn = document.getElementById('musicToggleBtn');
+            const label = document.getElementById('musicBtnLabel');
+
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            if (isPlaying) {
+                isPlaying = false;
+                clearInterval(timerId);
+                btn.classList.add('paused');
+                label.innerText = "MÚSICA ELETRÔNICA";
+            } else {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                isPlaying = true;
+                btn.classList.remove('paused');
+                label.innerText = "PAUSAR MÚSICA";
+                startSynthLoop();
+            }
+        }
+
+        function startSynthLoop() {
+            let step = 0;
+            const tempo = 128;
+            const interval = (60 / tempo / 4) * 1000;
+            const bassNotes = [130.81, 130.81, 155.56, 130.81, 174.61, 130.81, 116.54, 130.81];
+
+            timerId = setInterval(() => {
+                if (!isPlaying) return;
+                const time = audioCtx.currentTime;
+
+                if (step % 4 === 0) {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.frequency.setValueAtTime(150, time);
+                    osc.frequency.exponentialRampToValueAtTime(0.01, time + 0.15);
+                    gain.gain.setValueAtTime(0.8, time);
+                    gain.gain.exponentialRampToValueAtTime(0.01, time + 0.15);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(time);
+                    osc.stop(time + 0.15);
+                }
+
+                const note = bassNotes[step % bassNotes.length];
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(note, time);
+                gain.gain.setValueAtTime(0.12, time);
+                gain.gain.exponentialRampToValueAtTime(0.01, time + 0.1);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(time);
+                osc.stop(time + 0.1);
+
+                step++;
+            }, interval);
+        }
+    </script>
+</body>
+</html>
             background-color: var(--bg-dark);
             color: var(--text-white);
             font-family: var(--font-body);
